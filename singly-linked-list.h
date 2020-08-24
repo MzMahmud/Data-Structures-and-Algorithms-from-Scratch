@@ -148,7 +148,7 @@ template <class T> class SinglyLinkedList {
 
     void sort() { m_head = marge_sort(m_head); }
 
-    void show_list(std::ostream &sout) {
+    void show_list(std::ostream &sout = std::cout) {
         Node<T> *head = m_head;
         while (head != nullptr) {
             sout << head->data << " -> ";

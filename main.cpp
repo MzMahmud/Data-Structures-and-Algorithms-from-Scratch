@@ -43,10 +43,10 @@ int main(int argc, char *argv[]) {
     list3.push_back("list3");
 
     list.sort();
-    list.show_list(cout);
-    list1.show_list(cout);
-    list2.show_list(cout);
-    list3.show_list(cout);
+    list.show_list();
+    list1.show_list();
+    list2.show_list();
+    list3.show_list();
 
     return 0;
 }
