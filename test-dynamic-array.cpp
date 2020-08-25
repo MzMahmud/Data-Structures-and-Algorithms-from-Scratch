@@ -56,7 +56,9 @@ int main(int argc, char *argv[]) {
     strs.push_back("abir");
 
     {
-        DynamicArray<string> strs1(strs);
+        // DynamicArray<string> strs1(strs);
+        DynamicArray<string> strs1;
+        strs1 = strs;
         strs1.push_back("new");
         cout << "strs1 : ";
         cout << strs1 << endl;

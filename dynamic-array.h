@@ -12,7 +12,12 @@ template <class T> class DynamicArray {
     void reallocate() {
         T *old_a = m_a;
         m_a = new T[m_capacity];
-        memcpy(m_a, old_a, m_size * sizeof(T));
+
+        // NOTE: memcpy does not work with class assignment.
+        //       I have to research for a better solution.
+        for (int i = 0; i < m_size; ++i)
+            m_a[i] = old_a[i];
+
         delete[] old_a;
     }
 
@@ -28,6 +33,8 @@ template <class T> class DynamicArray {
         m_capacity = (size <= 4) ? 4 : (size + (size >> 1));
         m_a = new T[m_capacity];
 
+        // NOTE: memcpy does not work with class assignment.
+        //       I have to research for a better solution.
         for (int i = 0; i < m_size; ++i)
             m_a[i] = init_value;
     }
@@ -37,15 +44,15 @@ template <class T> class DynamicArray {
         m_size = other.m_size;
         m_a = new T[m_capacity];
 
+        // NOTE: memcpy does not work with class assignment.
+        //       I have to research for a better solution.
         for (int i = 0; i < m_size; i++)
             m_a[i] = other.m_a[i];
     }
 
     ~DynamicArray() {
-        std::cout << "in dest\n";
         if (m_a != nullptr)
             delete[] m_a;
-        std::cout << "end dest\n";
     }
 
     DynamicArray &operator=(const DynamicArray &other) {
@@ -61,6 +68,8 @@ template <class T> class DynamicArray {
 
         m_size = other.m_size;
 
+        // NOTE: memcpy does not work with class assignment.
+        //       I have to research for a better solution.
         for (int i = 0; i < m_size; i++)
             m_a[i] = other.m_a[i];
 

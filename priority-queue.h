@@ -3,15 +3,12 @@
 #define __PRIORITY_QUEUE__
 
 #include "dynamic-array.h"
-#include <vector>
 
 template <class T> class PriorityQueue {
   private:
     size_t m_size;
 
-    // DEBUG: There is a problem in Dynamic array code!
-    // DynamicArray<T> m_heap;
-    std::vector<T> m_heap;
+    DynamicArray<T> m_heap;
 
     inline int left(int index) {
         // 0 based: 2*index + 1
