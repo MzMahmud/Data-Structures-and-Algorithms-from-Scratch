@@ -9,7 +9,7 @@ In this repository I am implementing the **Data Structures** and **Algorithms** 
 - `Singly Linked` List without `tail` in `C`
 - `Singly Linked` List with `tail` in `C++` as `template class` 
 - `Stack` with __my__ `Singly Linked List`in `C++` as  `template class` 
-- `Queue` with __my__ `Singly Linked List`in `C++` as `template class` 
+- `Queue` with __my__ `Singly Linked List`in `C++` yas `template class` 
 
 ## Algorithms
 - Marge Sort (for Linked List)
