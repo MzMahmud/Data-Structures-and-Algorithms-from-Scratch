@@ -100,6 +100,12 @@ template <class T> class SinglyLinkedList {
 
     ~SinglyLinkedList() { free_list(m_head); }
 
+    void clear() {
+        free_list(m_head);
+        m_size = 0;
+        m_head = m_tail = nullptr;
+    }
+
     SinglyLinkedList<T> &operator=(const SinglyLinkedList<T> &other) {
         if (this == &other)
             return *this;
@@ -108,6 +114,11 @@ template <class T> class SinglyLinkedList {
     }
 
     bool is_empty() { return m_size == 0; }
+
+    size_t size() { return m_size; }
+
+    T front() { return m_head->data; }
+    T back() { return m_tail->data; }
 
     void push_front(T val) {
         m_size++;

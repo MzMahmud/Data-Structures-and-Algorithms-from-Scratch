@@ -44,8 +44,14 @@ int main(int argc, char *argv[]) {
     list.sort();
     list.show_list(cout);
     list1.show_list(cout);
-    list2.show_list(cout);
-    list3.show_list(cout);
+    list2.show_list();
+    list3.show_list();
+
+    list3.clear();
+    list3.push_front("1");
+    list3.push_back("2");
+    list3.push_back("3");
+    list3.show_list();
 
     return 0;
 }
