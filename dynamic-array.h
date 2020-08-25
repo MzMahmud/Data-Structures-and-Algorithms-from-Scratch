@@ -12,7 +12,7 @@ template <class T> class DynamicArray {
     void reallocate() {
         T *old_a = m_a;
         m_a = new T[m_capacity];
-        memmove(m_a, old_a, m_size * sizeof(T));
+        memcpy(m_a, old_a, m_size * sizeof(T));
         delete[] old_a;
     }
 
@@ -36,12 +36,16 @@ template <class T> class DynamicArray {
         m_capacity = other.m_capacity;
         m_size = other.m_size;
         m_a = new T[m_capacity];
-        memcpy(m_a, other.m_a, m_size * sizeof(T));
+
+        for (int i = 0; i < m_size; i++)
+            m_a[i] = other.m_a[i];
     }
 
     ~DynamicArray() {
+        std::cout << "in dest\n";
         if (m_a != nullptr)
             delete[] m_a;
+        std::cout << "end dest\n";
     }
 
     DynamicArray &operator=(const DynamicArray &other) {
@@ -56,7 +60,9 @@ template <class T> class DynamicArray {
         }
 
         m_size = other.m_size;
-        memcpy(m_a, other.m_a, m_size * sizeof(T));
+
+        for (int i = 0; i < m_size; i++)
+            m_a[i] = other.m_a[i];
 
         return *this;
     }

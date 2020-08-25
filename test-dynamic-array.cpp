@@ -31,17 +31,37 @@ int main(int argc, char *argv[]) {
 
     // cout << a << endl;
 
-    int n = 3, m = 3;
-    DynamicArray<DynamicArray<int>> a(DynamicArray<int>(0, n), m);
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            a[i][j] = m * i + j;
-        }
-    }
+    // int n = 3, m = 3;
+    // DynamicArray<DynamicArray<int>> a(DynamicArray<int>(0, n), m);
+    // for (int i = 0; i < n; i++) {
+    //     for (int j = 0; j < m; j++) {
+    //         a[i][j] = m * i + j;
+    //     }
+    // }
 
-    for (int i = 0; i < n; i++) {
-        cout << a[i] << endl;
-    }
+    // for (int i = 0; i < n; i++) {
+    //     cout << a[i] << endl;
+    // }
 
+    DynamicArray<string> strs;
+    strs.push_back("moaz");
+    strs.push_back("moon");
+    strs.push_back("maisha");
+    strs.push_back("abir");
+    strs.push_back("abir");
+    strs.push_back("abir");
+    strs.pop_back();
+    strs.pop_back();
+    strs.push_back("abir");
+    strs.push_back("abir");
+
+    {
+        DynamicArray<string> strs1(strs);
+        strs1.push_back("new");
+        cout << "strs1 : ";
+        cout << strs1 << endl;
+    }
+    cout << "strs :";
+    cout << strs << endl;
     return 0;
 }

@@ -3,11 +3,15 @@
 #define __PRIORITY_QUEUE__
 
 #include "dynamic-array.h"
+#include <vector>
 
 template <class T> class PriorityQueue {
   private:
     size_t m_size;
-    DynamicArray<T> m_heap;
+
+    // DEBUG: There is a problem in Dynamic array code!
+    // DynamicArray<T> m_heap;
+    std::vector<T> m_heap;
 
     inline int left(int index) {
         // 0 based: 2*index + 1
@@ -40,8 +44,6 @@ template <class T> class PriorityQueue {
     }
 
     void heapify_up(int index) {
-        // std::cout << "index " << index << std::endl;
-
         if (index <= 0)
             return;
 
@@ -63,14 +65,16 @@ template <class T> class PriorityQueue {
     }
 
     void heapify_down(int index) {
-        // TODO:
-        // TODO:
-
         if (is_leaf(index))
             return;
 
-        // this great complexity
+        // find the largest value
+        // among current node,left child,right child
+        // swap with that child and heapify_down recurrsively
+
+        // in this implementation this great complexity
         // because i am assuming the user only has < overloaded!!
+        // if we were allowed to use <= then it would have been easier
 
         // no left,may swap with right
         if (!has_left(index)) {
@@ -98,8 +102,8 @@ template <class T> class PriorityQueue {
 
             if (cl < cr) {
                 if (p < cr) {
-                    swap(p, cl);
-                    heapify_down(left(index));
+                    swap(p, cr);
+                    heapify_down(right(index));
                 }
             } else {
                 if (p < cl) {
@@ -112,6 +116,19 @@ template <class T> class PriorityQueue {
 
   public:
     PriorityQueue() { m_size = 0; }
+
+    PriorityQueue(const PriorityQueue &other) {
+        m_size = other.m_size;
+        m_heap = other.m_heap;
+    }
+
+    PriorityQueue &operator=(const PriorityQueue &other) {
+        if (this != &other) {
+            m_size = other.m_size;
+            m_heap = other.m_heap;
+        }
+        return *this;
+    }
 
     size_t size() { return m_size; }
 
@@ -129,16 +146,19 @@ template <class T> class PriorityQueue {
     }
 
     T pop() {
+        T max_priority = front();
+
         // swap with last element
         swap(m_heap[0], m_heap[m_size - 1]);
+
+        // remove last element
+        m_heap.pop_back();
+        m_size--;
 
         // adjust the heap downword
         heapify_down(0);
 
-        // reduce heap size and return the former last index
-        // m_size-- the m_heap[m_size]
-        // c++ condensed
-        return m_heap[--m_size];
+        return max_priority;
     }
 };
 
