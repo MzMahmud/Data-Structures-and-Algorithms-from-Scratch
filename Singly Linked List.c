@@ -37,9 +37,9 @@ node *remove_head(node *head) {
     if (!head)
         return head;
 
-    node *to_return = head->next;
+    node *new_head = head->next;
     free(head);
-    return to_return;
+    return new_head;
 }
 
 node *get_mid_prev(node *head) {
@@ -157,6 +157,11 @@ int main(int argc, char *args[]) {
 
     head = marge_sort(head);
     printf("Sorted:\n");
+
+    head = remove_head(head);
+    head = remove_head(head);
+    head = remove_head(head);
+
     print_list(head);
 
     free_list(head);

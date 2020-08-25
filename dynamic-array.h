@@ -18,9 +18,47 @@ template <class T> class DynamicArray {
 
   public:
     DynamicArray(size_t cap = 4) {
-        m_capacity = cap;
+        m_capacity = (cap < 4) ? 4 : cap;
         m_size = 0;
         m_a = new T[m_capacity];
+    }
+
+    DynamicArray(T init_value, size_t size) {
+        m_size = size;
+        m_capacity = (size <= 4) ? 4 : (size + (size >> 1));
+        m_a = new T[m_capacity];
+
+        for (int i = 0; i < m_size; ++i)
+            m_a[i] = init_value;
+    }
+
+    DynamicArray(const DynamicArray &other) {
+        m_capacity = other.m_capacity;
+        m_size = other.m_size;
+        m_a = new T[m_capacity];
+        memcpy(m_a, other.m_a, m_size * sizeof(T));
+    }
+
+    ~DynamicArray() {
+        if (m_a != nullptr)
+            delete[] m_a;
+    }
+
+    DynamicArray &operator=(const DynamicArray &other) {
+        if (this == &other)
+            return *this;
+
+        if (m_capacity < other.m_capacity) {
+            m_capacity = other.m_capacity;
+            T *old_a = m_a;
+            m_a = new T[m_capacity];
+            delete[] old_a;
+        }
+
+        m_size = other.m_size;
+        memcpy(m_a, other.m_a, m_size * sizeof(T));
+
+        return *this;
     }
 
     size_t size() { return m_size; }
@@ -35,25 +73,36 @@ template <class T> class DynamicArray {
             m_capacity = m_capacity + (m_capacity >> 1);
             reallocate();
         }
-
         m_a[m_size++] = val;
     }
 
     void pop_back() {
-        if (m_size)
-            m_size--;
+        if (m_size == 0)
+            throw std::string("Empty Array. Can't be popped!");
+        m_size--;
     }
 
-    T &operator[](int i) { return m_a[i]; }
-    const T &operator[](int i) const { return m_a[i]; }
+    T &operator[](int i) {
+        if (i < 0 or i >= m_size)
+            throw std::string("Index out of Bound!");
+        return m_a[i];
+    }
+    T &operator[](int i) const {
+        if (i < 0 or i >= m_size)
+            throw std::string("Index out of Bound!");
+        return m_a[i];
+    }
 };
 
 template <class T>
 std::ostream &operator<<(std::ostream &sout, const DynamicArray<T> &a) {
-    sout << "[";
     int n = a.size();
+
+    sout << "[";
     for (int i = 0; i < n; i++)
-        sout << a[i] << (i == (n - 1) ? "]" : ",");
+        sout << a[i] << (i == (n - 1) ? "" : ",");
+    sout << "]";
+
     return sout;
 }
 
