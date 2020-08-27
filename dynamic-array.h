@@ -111,10 +111,12 @@ template <class T> class DynamicArray {
     // iterators
   private:
     class iterator {
-      private:
+      protected:
         T *m_ptr;
 
       public:
+        iterator() {}
+
         iterator(T *ptr) : m_ptr(ptr) {}
 
         bool operator!=(const iterator &it) { return m_ptr != it.m_ptr; }
@@ -135,29 +137,20 @@ template <class T> class DynamicArray {
         }
     };
 
-    class reverse_iterator {
-      private:
-        T *m_ptr;
-
+    class reverse_iterator : public iterator {
       public:
-        reverse_iterator(T *ptr) : m_ptr(ptr) {}
-
-        bool operator!=(const reverse_iterator &it) {
-            return m_ptr != it.m_ptr;
-        }
-
-        T &operator*() { return *m_ptr; }
+        reverse_iterator(T *ptr) : iterator(ptr) {}
 
         // prefix ++it
         reverse_iterator &operator++() {
-            --m_ptr;
+            --iterator::m_ptr;
             return *this;
         }
 
         // postfix it++
         reverse_iterator operator++(int notused) {
             reverse_iterator prev_it = *this;
-            --m_ptr;
+            --iterator::m_ptr;
             return prev_it;
         }
     };

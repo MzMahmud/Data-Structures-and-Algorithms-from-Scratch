@@ -96,5 +96,10 @@ int main(int argc, char *argv[]) {
     }
     cout << strs << endl;
 
+    cout << "const auto&" << endl;
+    for (const auto &str : strs) {
+        cout << str << endl;
+    }
+
     return 0;
 }
