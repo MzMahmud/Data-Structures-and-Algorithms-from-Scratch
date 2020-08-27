@@ -40,7 +40,7 @@ void insertion_sort(vector<T> &a, int begin_index, int end_index,
     int max_index = -1;
 
     for (int i = begin_index; i <= end_index; i++) {
-        if ((max_index < 0) or (!less(a[i], a[max_index]))) {
+        if ((max_index < 0) or !less(a[i], a[max_index])) {
             max_index = i;
         }
     }
