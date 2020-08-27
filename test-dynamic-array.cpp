@@ -65,5 +65,36 @@ int main(int argc, char *argv[]) {
     }
     cout << "strs :";
     cout << strs << endl;
+
+    // test iterator
+    cout << "with raw iterator" << endl;
+    for (auto it = strs.begin(); it != strs.end(); ++it) {
+        // change value with iterator
+        if (*it == string("moaz"))
+            *it = "MOAZ";
+        cout << *it << endl;
+    }
+    cout << strs << endl;
+
+    cout << "just print with for each loop " << endl;
+    for (auto str : strs) {
+        cout << str << endl;
+    }
+
+    cout << "change value with for each loop " << endl;
+    for (auto &str : strs) {
+        str.push_back('0');
+    }
+    cout << strs << endl;
+
+    cout << "reverse iterator used to travarse backward\n";
+    for (auto it = strs.rbegin(); it != strs.rend(); ++it) {
+        // change value with reverse_iterator
+        if (*it == string("MOAZ0"))
+            *it = "moaz";
+        cout << *it << endl;
+    }
+    cout << strs << endl;
+
     return 0;
 }

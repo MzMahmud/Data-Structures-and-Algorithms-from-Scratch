@@ -107,6 +107,67 @@ template <class T> class DynamicArray {
             throw std::string("Index out of Bound!");
         return m_a[i];
     }
+
+    // iterators
+  private:
+    class iterator {
+      private:
+        T *m_ptr;
+
+      public:
+        iterator(T *ptr) : m_ptr(ptr) {}
+
+        bool operator!=(const iterator &it) { return m_ptr != it.m_ptr; }
+
+        T &operator*() { return *m_ptr; }
+
+        // prefix ++it
+        iterator &operator++() {
+            ++m_ptr;
+            return *this;
+        }
+
+        // postfix it++
+        iterator operator++(int notused) {
+            iterator prev_it = *this;
+            ++m_ptr;
+            return prev_it;
+        }
+    };
+
+    class reverse_iterator {
+      private:
+        T *m_ptr;
+
+      public:
+        reverse_iterator(T *ptr) : m_ptr(ptr) {}
+
+        bool operator!=(const reverse_iterator &it) {
+            return m_ptr != it.m_ptr;
+        }
+
+        T &operator*() { return *m_ptr; }
+
+        // prefix ++it
+        reverse_iterator &operator++() {
+            --m_ptr;
+            return *this;
+        }
+
+        // postfix it++
+        reverse_iterator operator++(int notused) {
+            reverse_iterator prev_it = *this;
+            --m_ptr;
+            return prev_it;
+        }
+    };
+
+  public:
+    iterator begin() { return iterator(m_a); }
+    iterator end() { return iterator(m_a + m_size); }
+
+    reverse_iterator rbegin() { return reverse_iterator(m_a + m_size - 1); }
+    reverse_iterator rend() { return reverse_iterator(m_a - 1); }
 };
 
 template <class T>
