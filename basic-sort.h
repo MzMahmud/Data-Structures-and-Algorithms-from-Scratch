@@ -15,24 +15,24 @@ template <class T> bool less_then(T a, T b) { return a < b; }
 
 template <class T>
 void bouble_sort(vector<T> &a, int begin_index, int end_index,
-                 bool (*less)(T, T) = less_then) {
+                 bool (*compare_function)(T, T) = less_then) {
 
     if (begin_index >= end_index)
         return;
 
     int i = begin_index;
     while (i < end_index) {
-        if (!less(a[i], a[i + 1]))
+        if (!compare_function(a[i], a[i + 1]))
             swap(a[i], a[i + 1]);
         i++;
     }
 
-    bouble_sort(a, begin_index, end_index - 1, less);
+    bouble_sort(a, begin_index, end_index - 1, compare_function);
 }
 
 template <class T>
 void insertion_sort(vector<T> &a, int begin_index, int end_index,
-                    bool (*less)(T, T) = less_then) {
+                    bool (*compare_function)(T, T) = less_then) {
 
     if (begin_index >= end_index)
         return;
@@ -40,13 +40,13 @@ void insertion_sort(vector<T> &a, int begin_index, int end_index,
     int max_index = -1;
 
     for (int i = begin_index; i <= end_index; i++) {
-        if ((max_index < 0) or !less(a[i], a[max_index])) {
+        if ((max_index < 0) or !compare_function(a[i], a[max_index])) {
             max_index = i;
         }
     }
 
     swap(a[max_index], a[end_index]);
-    insertion_sort(a, begin_index, end_index - 1, less);
+    insertion_sort(a, begin_index, end_index - 1, compare_function);
 }
 
 #endif //__BASIC_SORT__
