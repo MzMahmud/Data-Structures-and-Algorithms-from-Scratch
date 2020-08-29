@@ -64,8 +64,11 @@ int main() {
     // insertion_sort_recursive(my_sorted, 0, n - 1, decending_by_last_digit);
 
     // insertion_sort(my_sorted, 0, n - 1);
-    insertion_sort(my_sorted, 0, n - 1, decending_by_last_digit);
+    // insertion_sort(my_sorted, 0, n - 1, decending_by_last_digit);
 
+    // bouble_sort_recursive(my_sorted.begin(), my_sorted.end(),
+    //                       decending_by_last_digit);
+    bouble_sort_recursive(my_sorted.begin(), my_sorted.end());
     print(my_sorted);
 
     // different type
