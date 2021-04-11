@@ -33,7 +33,7 @@ class Queue:
         return len(self.__linked_list)
 
     def __str__(self):
-        return f'Queue [{self.__linked_list.comma_separated_str()}]'
+        return f'Queue [{self.__linked_list.get_str_separated_by()}]'
 
     def __iter__(self):
         return iter(self.__linked_list)

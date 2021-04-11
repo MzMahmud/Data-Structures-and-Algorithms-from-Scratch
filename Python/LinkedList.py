@@ -47,24 +47,19 @@ class LinkedList:
             raise Exception("Can't peek tail of empty list!")
         return self.__tail.val
 
-    def comma_separated_str(self):
+    def get_str_separated_by(self, delim=','):
         curr = self.__head
         out = []
         while curr:
             out.append(f'{curr.val}')
             curr = curr.next
-        return ','.join(out)
+        return delim.join(out)
 
     def __len__(self):
         return self.__size
 
     def __str__(self):
-        curr = self.__head
-        out = []
-        while curr:
-            out.append(f'{curr.val}')
-            curr = curr.next
-        return '->'.join(out)
+        return self.get_str_separated_by('->')
 
     def __iter__(self):
         curr = self.__head
