@@ -11,6 +11,8 @@ In this repository I am implementing the **Data Structures** and **Algorithms** 
 - `Stack` with __my__ `Singly Linked List` in `C++` as  `template class` 
 - `Queue` with __my__ `Singly Linked List` in `C++` as `template class` 
 - `Priority Queue`(Max heap) with __my__ `Dynamic Array` in `C++` as `template class`. The implementation is a bit messy as I am assuming the user has provided only an overload to `< operator` for the custom class. I am studying to find elegent way to handle this. 
+- `Binary Search Tree` in `C++` as `template class`
+- `Singly Linked List`, `Stack`, `Queue` in `python`
 
 ## Algorithms
 - Marge Sort __within__ Singly Linked List class.
