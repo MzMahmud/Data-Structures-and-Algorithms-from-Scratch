@@ -10,25 +10,23 @@ private:
 
         Node() : left(nullptr), right(nullptr) {}
 
-        Node(T v) : val(v), left(nullptr), right(nullptr) {}
+        explicit Node(const T &v) : val(v), left(nullptr), right(nullptr) {}
     };
 
     Node *m_root;
     size_t m_size;
 
-    Node *insert(Node *root, T val) {
+    Node *insert_and_get_new_root(Node *root, const T &val) {
         if (root == nullptr)
             return new Node(val);
-
         if (val < root->val)
-            root->left = insert(root->left, val);
+            root->left = insert_and_get_new_root(root->left, val);
         else
-            root->right = insert(root->right, val);
-
+            root->right = insert_and_get_new_root(root->right, val);
         return root;
     }
 
-    bool contains(Node *root, T val) {
+    bool contains(Node *root, const T &val) const {
         if (root == nullptr)
             return false;
 
@@ -39,12 +37,12 @@ private:
                                  : contains(root->right, val);
     }
 
-    Node *copy_from(Node *root) {
+    Node *copy_and_get_new_root_from(Node *root) {
         if (root == nullptr)
             return root;
         Node *copied_root = new Node(root->val);
-        copied_root->left = copy_from(root->left);
-        copied_root->right = copy_from(root->right);
+        copied_root->left = copy_and_get_new_root_from(root->left);
+        copied_root->right = copy_and_get_new_root_from(root->right);
         return copied_root;
     }
 
@@ -71,7 +69,7 @@ private:
         return root->val;
     }
 
-    Node *remove_root(Node *root) {
+    Node *remove_root_and_get_new_root(Node *root) {
         Node *new_root;
         if (root->left == nullptr) {
             new_root = root->right;
@@ -84,20 +82,20 @@ private:
         }
         T successor = find_successor(root);
         root->val = successor;
-        root->right = remove(root->right, successor);
+        root->right = remove_and_get_new_root(root->right, successor);
         return root;
     }
 
-    Node *remove(Node *root, T val) {
+    Node *remove_and_get_new_root(Node *root, const T &val) {
         if (root == nullptr)
             return root;
 
         if (val == root->val)
-            root = remove_root(root);
+            root = remove_root_and_get_new_root(root);
         else if (val < root->val)
-            root->left = remove(root->left, val);
+            root->left = remove_and_get_new_root(root->left, val);
         else
-            root->right = remove(root->right, val);
+            root->right = remove_and_get_new_root(root->right, val);
         return root;
     }
 
@@ -106,7 +104,7 @@ public:
 
     BinarySearchTree(const BinarySearchTree<T> &other) {
         m_size = other.m_size;
-        m_root = copy_from(other.m_root);
+        m_root = copy_and_get_new_root_from(other.m_root);
     }
 
     ~BinarySearchTree() {
@@ -116,25 +114,33 @@ public:
     BinarySearchTree<T> &operator=(const BinarySearchTree<T> &other) {
         if (this != &other) {
             free_tree(m_root);
-            m_root = copy_from(other.m_root);
+            m_root = copy_and_get_new_root_from(other.m_root);
             m_size = other.m_size;
         }
         return *this;
     }
 
-    void insert(T val) {
-        m_root = insert(m_root, val);
+    void insert(const T &val) {
+        m_root = insert_and_get_new_root(m_root, val);
         m_size++;
     }
 
-    void remove(T val) {
-        m_root = remove(m_root, val);
+    void remove(const T &val) {
+        m_root = remove_and_get_new_root(m_root, val);
         m_size--;
     }
 
-    bool contains(T val) { return contains(m_root, val); }
+    bool contains(const T &val) const {
+        return contains(m_root, val);
+    }
 
-    void print_in_order(std::ostream &sout) const { print_in_order(m_root, sout); }
+    size_t size() const {
+        return m_size;
+    }
+
+    void print_in_order(std::ostream &sout) const {
+        print_in_order(m_root, sout);
+    }
 };
 
 template<typename T>
