@@ -111,6 +111,9 @@ public class SinglyLinkedList<T> implements Iterable<T> {
 
         @Override
         public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
             var data = current.data;
             current = current.next;
             return data;
