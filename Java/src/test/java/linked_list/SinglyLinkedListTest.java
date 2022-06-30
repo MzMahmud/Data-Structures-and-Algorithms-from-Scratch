@@ -83,9 +83,9 @@ class SinglyLinkedListTest {
 
     <T> void assertIsEmpty(SinglyLinkedList<T> singlyLinkedList) {
         assertEquals(0, singlyLinkedList.size());
-        assertThrows(NoSuchElementException.class, new SinglyLinkedList<>()::peekHead);
-        assertThrows(NoSuchElementException.class, new SinglyLinkedList<>()::peekTail);
-        assertThrows(NoSuchElementException.class, new SinglyLinkedList<>()::popFront);
+        assertThrows(NoSuchElementException.class, singlyLinkedList::peekHead);
+        assertThrows(NoSuchElementException.class, singlyLinkedList::peekTail);
+        assertThrows(NoSuchElementException.class, singlyLinkedList::popFront);
     }
 
     @Test
