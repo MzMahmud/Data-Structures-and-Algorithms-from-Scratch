@@ -67,18 +67,10 @@ class SinglyLinkedListTest {
 
     @Test
     void givenEmptyList_throwsNoSuchElementException() {
-        assertThrows(
-                NoSuchElementException.class,
-                () -> new SinglyLinkedList<>().peekHead()
-        );
-        assertThrows(
-                NoSuchElementException.class,
-                () -> new SinglyLinkedList<>().peekTail()
-        );
-        assertThrows(
-                NoSuchElementException.class,
-                () -> new SinglyLinkedList<>().popFront()
-        );
+        var singlyLinkedList = new SinglyLinkedList<>();
+        assertThrows(NoSuchElementException.class, singlyLinkedList::peekHead);
+        assertThrows(NoSuchElementException.class, singlyLinkedList::peekTail);
+        assertThrows(NoSuchElementException.class, singlyLinkedList::popFront);
     }
 
     <T> void assertIsEmpty(SinglyLinkedList<T> singlyLinkedList) {
@@ -104,11 +96,13 @@ class SinglyLinkedListTest {
         assertEquals(1, singlyLinkedList.peekHead());
         assertEquals(3, singlyLinkedList.peekTail());
 
-        System.out.println(singlyLinkedList.popFront());
+        assertEquals(1, singlyLinkedList.popFront());
         System.out.printf("singlyLinkedList %s\nsize %d\n", singlyLinkedList, singlyLinkedList.size());
-        System.out.println(singlyLinkedList.popFront());
+
+        assertEquals(2, singlyLinkedList.popFront());
         System.out.printf("singlyLinkedList %s\nsize %d\n", singlyLinkedList, singlyLinkedList.size());
-        System.out.println(singlyLinkedList.popFront());
+        
+        assertEquals(3, singlyLinkedList.popFront());
         System.out.printf("singlyLinkedList %s\nsize %d\n", singlyLinkedList, singlyLinkedList.size());
 
         assertIsEmpty(singlyLinkedList);
