@@ -21,35 +21,38 @@ class PriorityQueue:
     def __len__(self):
         return len(self.__array)
 
+    def __repr__(self):
+        return f'PriorityQueue([{self.__array}])'
+
     def is_empty(self):
         return len(self) == 0
 
     def __heapify_up(self, current_index):
-        parent_index = PriorityQueue.__get_parent_index(current_index)
         array = self.__array
-        while parent_index >= 0 and self.__has_priority_at_index(current_index, parent_index):
+        parent_index = PriorityQueue.__get_parent_index(current_index)
+        while current_index > 0 and self.__has_more_priority(current_index, parent_index):
             array[current_index], array[parent_index] = array[parent_index], array[current_index]
             current_index = parent_index
             parent_index = PriorityQueue.__get_parent_index(current_index)
 
     def __heapify_down(self, current_index):
+        array, n = self.__array, len(self.__array)
         left_child_index = PriorityQueue.__get_left_child_index(current_index)
         right_child_index = PriorityQueue.__get_right_child_index(current_index)
-        array = self.__array
-        n = len(array)
         while left_child_index < n or right_child_index < n:
-            if right_child_index < n and self.__has_priority_at_index(right_child_index, current_index):
-                array[current_index], array[right_child_index] = array[right_child_index], array[current_index]
-                current_index = right_child_index
-            elif left_child_index < n and self.__has_priority_at_index(left_child_index, current_index):
-                array[current_index], array[left_child_index] = array[left_child_index], array[current_index]
-                current_index = left_child_index
-            else:
+            min_value_index = current_index
+            if left_child_index < n and self.__has_more_priority(left_child_index, min_value_index):
+                min_value_index = left_child_index
+            if right_child_index < n and self.__has_more_priority(right_child_index, min_value_index):
+                min_value_index = right_child_index
+            if min_value_index == current_index:
                 break
+            array[current_index], array[min_value_index] = array[min_value_index], array[current_index]
+            current_index = min_value_index
             left_child_index = PriorityQueue.__get_left_child_index(current_index)
             right_child_index = PriorityQueue.__get_right_child_index(current_index)
 
-    def __has_priority_at_index(self, index_1, index_2):
+    def __has_more_priority(self, index_1, index_2):
         if self.__compare_function is None:
             return self.__array[index_1] < self.__array[index_2]
         return self.__compare_function(self.__array[index_1], self.__array[index_2]) < 0
@@ -65,5 +68,3 @@ class PriorityQueue:
     @staticmethod
     def __get_right_child_index(index):
         return 2 * index + 2
-    
-    
