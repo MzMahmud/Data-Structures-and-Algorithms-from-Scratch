@@ -9,16 +9,15 @@ typedef struct ArrayList {
 
 ArrayList construct(int initialCapacity) {
     ArrayList arrayList;
+    
     arrayList.data = (int *) malloc(initialCapacity * sizeof(int));
     arrayList.size = 0;
     arrayList.capacity = initialCapacity;
+    
     return arrayList;
 }
 
 void reallocate(ArrayList *arrayList, int newCapacity) {
-    if (arrayList->capacity > newCapacity) {
-        return;
-    }
     arrayList->data = (int *) realloc(arrayList->data, newCapacity * sizeof(int));
     arrayList->capacity = newCapacity;
 }
