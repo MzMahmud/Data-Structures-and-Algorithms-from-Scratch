@@ -82,12 +82,8 @@ class DoublyLinkedList:
         return self.head.value
 
     def get_str(self, prefix, seperator, suffix):
-        list_str = []
-        curr = self.head
-        while curr is not None:
-            list_str.append(f'{curr.value}')
-            curr = curr.next
-        return f'{prefix}{seperator.join(list_str)}{suffix}'
+        str_iter = map(str, iter(self))
+        return f'{prefix}{seperator.join(str_iter)}{suffix}'
 
     def __str__(self):
         return self.get_str("", " <-> ", "")
@@ -118,6 +114,7 @@ class DoublyLinkedList:
 
 def test():
     doubly_linked_list = DoublyLinkedList([1, 2])
+    print(doubly_linked_list)
     doubly_linked_list.append_back(3)
     doubly_linked_list.append_back(4)
     doubly_linked_list.append_front(0)
