@@ -96,8 +96,7 @@ class PriorityQueue<T> implements Iterable<T> {
     }
 
     private buildHeap() {
-        let start = (this.size() >> 1) - 1;
-        for (; start >= 0; start--) {
+        for (let start = this.parent(this.size() - 1); start >= 0; start--) {
             this.heapifyDown(start);
         }
     }
