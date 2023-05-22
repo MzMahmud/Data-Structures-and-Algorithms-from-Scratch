@@ -62,6 +62,10 @@ class PriorityQueue<T> implements Iterable<T> {
         return (index << 1) + 2;
     }
 
+    private compare(i: number, j: number) {
+        return this.compareFn(this.heap[i], this.heap[j]);
+    }
+
     private swap(i: number, j: number) {
         const temp = this.heap[i];
         this.heap[i] = this.heap[j];
@@ -69,7 +73,7 @@ class PriorityQueue<T> implements Iterable<T> {
     }
 
     private heapifyUp(start: number) {
-        while (start > 0 && this.compareFn(this.heap[start], this.heap[this.parent(start)]) < 0) {
+        while (start > 0 && this.compare(start,this.parent(start)) < 0) {
             const parent = this.parent(start);
             this.swap(start, parent);
             start = parent;
@@ -77,12 +81,12 @@ class PriorityQueue<T> implements Iterable<T> {
     }
 
     private heapifyDown(start: number) {
-        const size = this.size();
-        let minIndex = start, left = this.left(start), right = this.right(start);
-        if (left < size && this.compareFn(this.heap[left], this.heap[minIndex]) < 0) {
+        const size = this.size(), left = this.left(start), right = this.right(start);
+        let minIndex = start;
+        if (left < size && this.compare(left, minIndex) < 0) {
             minIndex = left;
         }
-        if (right < size && this.compareFn(this.heap[right], this.heap[minIndex]) < 0) {
+        if (right < size && this.compare(right, minIndex) < 0) {
             minIndex = right;
         }
         if (minIndex !== start) {
