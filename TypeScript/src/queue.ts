@@ -8,7 +8,7 @@ class ListNode<T> {
     }
 }
 
-class Queue<T> {
+class Queue<T> implements Iterable<T> {
     private head: ListNode<T> | null = null;
     private tail: ListNode<T> | null = null;
     private length: number = 0;
@@ -54,13 +54,15 @@ class Queue<T> {
         return front;
     }
 
-    print() {
-        let curr = this.head;
-        const values: string[] = []
-        while (curr !== null) {
-            console.log(`${curr.data}`);
-            curr = curr.next;
+    [Symbol.iterator](): Iterator<T> {
+        let head = this.head;
+        return {
+            next: (): IteratorResult<T> => {
+                if (head === null) return { value: undefined, done: true };
+                const value = head.data;
+                head = head.next;
+                return { value: value, done: false };
+            }
         }
-        console.log(values.join('->'));
     }
 }
