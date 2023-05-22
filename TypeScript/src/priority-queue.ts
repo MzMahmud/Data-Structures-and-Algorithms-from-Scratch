@@ -1,6 +1,6 @@
 type CompareFn<T> = (a: T, b: T) => number;
 
-class PriorityQueue<T> {
+class PriorityQueue<T> implements Iterable<T> {
     private heap: T[] = [];
     private compareFn: CompareFn<T> = (a, b) => a === b ? 0 : (a < b ? -1 : 1);
 
@@ -35,6 +35,19 @@ class PriorityQueue<T> {
         this.heap.pop();
         this.heapifyDown(0);
         return top;
+    }
+
+    [Symbol.iterator](): Iterator<T> {
+        const heap = [...this.heap].sort(this.compareFn);
+        let index = 0;
+        return {
+            next: (): IteratorResult<T> => {
+                if (index === heap.length) {
+                    return { value: undefined, done: true };
+                }
+                return { value: heap[index++], done: false };
+            }
+        };
     }
 
     private parent(index: number) {
