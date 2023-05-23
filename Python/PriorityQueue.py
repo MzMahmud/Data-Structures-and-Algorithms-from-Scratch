@@ -1,65 +1,87 @@
+from functools import cmp_to_key
+
+default_compare_fn = lambda a, b: -1 if a < b else 0 if a == b else 1
+
 class PriorityQueue:
-    def __init__(self, compare_function=None):
-        self.__array = []
-        self.__compare_function = compare_function
-
-    def add(self, value):
-        self.__array.append(value)
-        self.__heapify_up(len(self.__array) - 1)
-
-    def peek(self):
-        return self.__array[0]
-
-    def poll(self):
-        top_item = self.peek()
-        n = len(self.__array) - 1
-        self.__array[0], self.__array[n] = self.__array[n], self.__array[0]
-        self.__array.pop()
-        self.__heapify_down(0)
-        return top_item
-
+    def __init__(self, data=None, compare_fn=None):
+        self._heap = [] if data is None else list(data)
+        self._compare_fn = default_compare_fn if compare_fn is None else compare_fn
+        self._build_heap()
+    
     def __len__(self):
-        return len(self.__array)
-
-    def __repr__(self):
-        return f'PriorityQueue([{self.__array}])'
-
+        return len(self._heap)
+    
     def is_empty(self):
         return len(self) == 0
+    
+    def __bool__(self):
+        return not self.is_empty()
+    
+    def add(self, value):
+        self._heap.append(value)
+        self._heapify_up(len(self._heap) - 1)
+    
+    def peek(self):
+        if self.is_empty():
+            raise "PriorityQueue empty"
+        return self._heap[0]
+    
+    def poll(self):
+        if self.is_empty():
+            raise "PriorityQueue empty"
+        top = self._heap[0]
+        self._swap(0, len(self._heap) - 1)
+        self._heap.pop()
+        self._heapify_down(0)
+        return top
+    
+    def __iter__(self):
+        self._sorted_heap = sorted(self._heap, key=cmp_to_key(self._compare_fn))
+        self.index = 0
+        return self
 
-    def __heapify_up(self, current_index):
-        parent_index = PriorityQueue.__i_parent(current_index)
-        while current_index > 0 and self.__has_more_priority(current_index, parent_index):
-            PriorityQueue.__swap(current_index, parent_index, self.__array)
-            current_index = parent_index
-            parent_index = PriorityQueue.__i_parent(current_index)
+    def __next__(self):
+        if self.index >= len(self._sorted_heap):
+            raise StopIteration
+        value = self._sorted_heap[self.index]
+        self.index += 1
+        return value
+    
+    def _swap(self, i, j):
+        self._heap[i], self._heap[j] = self._heap[j], self._heap[i]
+    
+    def _parent(self, index):
+        return (index - 1) >> 1
+    
+    def _left(self, index):
+        return (index << 1) + 1
+    
+    def _right(self, index):
+        return (index << 1) + 2
+    
+    def _more_priority(self, i, j):
+        return self._compare_fn(self._heap[i], self._heap[j]) < 0
 
-    def __heapify_down(self, current_index):
-        max_index = len(self.__array)
-        while (left_child_index := PriorityQueue.__i_left_child(current_index)) < max_index:
-            min_value_index = left_child_index
-            right_child_index = left_child_index + 1
-            if right_child_index < max_index and self.__has_more_priority(right_child_index, min_value_index):
-                min_value_index = right_child_index
-            if self.__has_more_priority(min_value_index, current_index):
-                PriorityQueue.__swap(min_value_index, current_index, self.__array)
-                current_index = min_value_index
-            else:
-                break
+    def _heapify_up(self, start):
+        while start > 0 and self._more_priority(start, parent := self._parent(start)):
+            self._swap(start, parent)
+            start = parent
 
-    def __has_more_priority(self, index_1, index_2):
-        if self.__compare_function is None:
-            return self.__array[index_1] < self.__array[index_2]
-        return self.__compare_function(self.__array[index_1], self.__array[index_2]) < 0
+    def _high_priority_idx(self, start):
+        high_priority = start
+        size, left, right = len(self), self._left(start), self._right(start)
+        if left < size and self._more_priority(left, high_priority):
+            high_priority = left
+        if right < size and self._more_priority(right, high_priority):
+            high_priority = right
+        return high_priority
+        
+    def _heapify_down(self, start):
+        while start != (high_priority := self._high_priority_idx(start)):
+            self._swap(start, high_priority)
+            start = high_priority
 
-    @staticmethod
-    def __swap(i, j, array):
-        array[i], array[j] = array[j], array[i]
-
-    @staticmethod
-    def __i_parent(index):
-        return (index - 1) // 2
-
-    @staticmethod
-    def __i_left_child(index):
-        return 2 * index + 1
+    def _build_heap(self):
+        last_parent = self._parent(len(self._heap) - 1)
+        for start in range(last_parent, -1, -1):
+            self._heapify_down(start)
