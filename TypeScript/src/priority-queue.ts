@@ -73,8 +73,8 @@ class PriorityQueue<T> implements Iterable<T> {
     }
 
     private heapifyUp(start: number) {
-        while (start > 0 && this.compare(start,this.parent(start)) < 0) {
-            const parent = this.parent(start);
+        let parent: number;
+        while (start > 0 && this.compare(start, parent = this.parent(start)) < 0) {
             this.swap(start, parent);
             start = parent;
         }
