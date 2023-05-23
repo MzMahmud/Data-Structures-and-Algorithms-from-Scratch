@@ -62,8 +62,8 @@ class PriorityQueue<T> implements Iterable<T> {
         return (index << 1) + 2;
     }
 
-    private compare(i: number, j: number) {
-        return this.compareFn(this.heap[i], this.heap[j]);
+    private hasMorePriority(i: number, j: number): boolean {
+        return this.compareFn(this.heap[i], this.heap[j]) < 0;
     }
 
     private swap(i: number, j: number) {
@@ -74,24 +74,29 @@ class PriorityQueue<T> implements Iterable<T> {
 
     private heapifyUp(start: number) {
         let parent: number;
-        while (start > 0 && this.compare(start, parent = this.parent(start)) < 0) {
+        while (start > 0 && this.hasMorePriority(start, parent = this.parent(start))) {
             this.swap(start, parent);
             start = parent;
         }
     }
 
-    private heapifyDown(start: number) {
+    private highPriorityIndex(start: number) {
         const size = this.size(), left = this.left(start), right = this.right(start);
-        let minIndex = start;
-        if (left < size && this.compare(left, minIndex) < 0) {
-            minIndex = left;
+        let highPriority = start;
+        if (left < size && this.hasMorePriority(left, highPriority)) {
+            highPriority = left;
         }
-        if (right < size && this.compare(right, minIndex) < 0) {
-            minIndex = right;
+        if (right < size && this.hasMorePriority(right, highPriority)) {
+            highPriority = right;
         }
-        if (minIndex !== start) {
-            this.swap(start, minIndex);
-            this.heapifyDown(minIndex);
+        return highPriority;
+    }
+
+    private heapifyDown(start: number) {
+        let highPriority: number;
+        while (start != (highPriority = this.highPriorityIndex(start))) {
+            this.swap(start, highPriority);
+            start = highPriority;
         }
     }
 
