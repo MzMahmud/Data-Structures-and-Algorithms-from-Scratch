@@ -61,6 +61,7 @@ class DoublyLinkedList<T> {
     pop(node: DoublyLinkedListNode<T>) {
         if (node === this.head) return this.popFront();
         if (node === this.tail) return this.popBack();
+        this.size--;
         node.prev!.next = node.next;
         node.next!.prev = node.prev;
         return node.value;
@@ -68,6 +69,7 @@ class DoublyLinkedList<T> {
 
     pushAfter(node: DoublyLinkedListNode<T>, value: T) {
         if (node === this.tail) return this.pushBack(value);
+        this.size++;
         const pushed: DoublyLinkedListNode<T> = { value };
         const next = node.next!;
         next.prev = pushed;
@@ -79,6 +81,7 @@ class DoublyLinkedList<T> {
 
     pushBefore(node: DoublyLinkedListNode<T>, value: T) {
         if (node === this.head) return this.pushFront(value);
+        this.size++;
         const pushed: DoublyLinkedListNode<T> = { value };
         const prev = node.prev!;
         prev.next = pushed;
@@ -102,11 +105,3 @@ type DoublyLinkedListNode<T> = {
     value: T
     next?: DoublyLinkedListNode<T>;
 }
-
-const list = new DoublyLinkedList<number>();
-const nodes: DoublyLinkedListNode<number>[] = [];
-for (let i = 0; i < 4; i++) {
-    nodes.push(list.pushBack(i));
-}
-list.pushBefore(nodes[3], 64);
-console.log(list.toString(), list.length);
