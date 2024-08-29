@@ -37,6 +37,7 @@ class PriorityQueue<T> implements Iterable<T> {
         return top;
     }
 
+    /* this is an example of iterator without generator
     [Symbol.iterator](): Iterator<T> {
         const heap = [...this.heap].sort(this.compareFn);
         let index = 0;
@@ -48,6 +49,11 @@ class PriorityQueue<T> implements Iterable<T> {
                 return { value: heap[index++], done: false };
             }
         };
+    } */
+
+    *[Symbol.iterator]() {
+        const heap = [...this.heap].sort(this.compareFn);
+        for (const t of heap) yield t;
     }
 
     private parent(index: number) {
