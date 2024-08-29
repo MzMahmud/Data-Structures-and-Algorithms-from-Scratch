@@ -1,6 +1,10 @@
 class Stream<T> {
     constructor(private stream: Generator<T, void, unknown>) { }
 
+    static fromGenerator<T>(generator: Generator<T, void, unknown>) {
+        return new Stream(generator);
+    }
+
     static fromIterable<T>(iterable: Iterable<T>) {
         const stream = (function* () {
             for (const t of iterable) yield t;
