@@ -1,23 +1,23 @@
-class DisjointSet<TKey> {
-    private parents = new Map<TKey, TKey>();
-    private ranks = new Map<TKey, number>();
+class DisjointSet<T> {
+    private parents = new Map<T, T>();
+    private ranks = new Map<T, number>();
     private nComponents = 0;
 
-    constructor(data?: Iterable<TKey>) {
+    constructor(data?: Iterable<T>) {
         if (data != null) for (const key of data) this.add(key);
     }
 
-    find(key: TKey): TKey | undefined {
-        let parent = this.parents.get(key);
+    find(t: T): T | undefined {
+        let parent = this.parents.get(t);
         if (parent == null) return undefined;
-        if (parent === key) return key;
+        if (parent === t) return t;
         parent = this.find(parent);
         if (parent == undefined) return undefined;
-        this.parents.set(key, parent);
+        this.parents.set(t, parent);
         return parent;
     }
 
-    union(a: TKey, b: TKey): boolean {
+    union(a: T, b: T): boolean {
         const parA = this.find(a), parB = this.find(b);
         if (parA == undefined || parB == undefined) return false;
         if (parA === parB) return false;
@@ -35,7 +35,7 @@ class DisjointSet<TKey> {
         return true;
     }
 
-    isInSameSet(a: TKey, b: TKey): boolean {
+    isInSameSet(a: T, b: T): boolean {
         return this.find(a) === this.find(b);
     }
 
@@ -43,16 +43,16 @@ class DisjointSet<TKey> {
         return this.nComponents;
     }
 
-    add(key: TKey): boolean {
-        if (this.parents.has(key)) return false;
+    add(t: T): boolean {
+        if (this.parents.has(t)) return false;
         this.nComponents++;
-        this.parents.set(key, key);
-        this.ranks.set(key, 1);
+        this.parents.set(t, t);
+        this.ranks.set(t, 1);
         return true;
     }
 
     getDisjointSets() {
-        const sets = new Map<TKey, TKey[]>();
+        const sets = new Map<T, T[]>();
         for (const key of this.parents.keys()) {
             const parent = this.find(key);
             if (parent == undefined) continue;
