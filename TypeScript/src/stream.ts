@@ -59,7 +59,7 @@ class Stream<T> {
     }
 
     static concatIterable<T>(...itarables: Iterable<T>[]) {
-        const streams = itarables.map(it => Stream.create(...it));
+        const streams = itarables.map(it => Stream.fromIterable(it));
         return Stream.concat(...streams);
     }
 
@@ -115,7 +115,7 @@ class Stream<T> {
     }
 
     appendIterable(itarable: Iterable<T>) {
-        return Stream.concat(this, Stream.create(...itarable));
+        return Stream.concat(this, Stream.fromIterable(itarable));
     }
 
     prepend(stream: Stream<T>) {
@@ -123,7 +123,7 @@ class Stream<T> {
     }
 
     prependIterable(itarable: Iterable<T>) {
-        return Stream.concat(Stream.create(...itarable), this);
+        return Stream.concat(Stream.fromIterable(itarable), this);
     }
 
     forEach(consumer: (t: T) => void) {
