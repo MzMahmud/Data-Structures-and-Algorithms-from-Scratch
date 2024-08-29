@@ -58,6 +58,13 @@ class Stream<T> {
         return new Stream(mapped);
     }
 
+    peek(consumer: (t: T) => void) {
+        return this.map((t) => {
+            consumer(t);
+            return t;
+        })
+    }
+
     filter(filterFn: (t: T) => boolean) {
         const stream = this.stream;
         const filtered = (function* () {
