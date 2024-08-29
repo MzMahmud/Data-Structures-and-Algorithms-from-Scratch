@@ -1,11 +1,9 @@
-class Stream<T>{
+class Stream<T> {
     constructor(private stream: Generator<T, void, unknown>) { }
 
     static fromIterable<T>(iterable: Iterable<T>) {
         const stream = (function* () {
-            for (const t of iterable) {
-                yield t;
-            }
+            for (const t of iterable) yield t;
         })();
         return new Stream(stream);
     }
@@ -14,11 +12,48 @@ class Stream<T>{
         return Stream.fromIterable(ts);
     }
 
+    static iterate<T>(
+        initialValue: T,
+        stopCondition: (t: T, index: number) => boolean,
+        nextValue: (prevValue: T, index: number) => T
+    ) {
+        const stream = (function* () {
+            let i = 0;
+            for (let t = initialValue; !stopCondition(t, i); t = nextValue(t, i)) {
+                yield t;
+                i++;
+            }
+        })();
+        return new Stream(stream);
+    }
+
+    static iterateWithIndex<T>(
+        initialValue: T,
+        stopCondition: (t: T, index: number) => boolean,
+        nextValue: (prevValue: T, index: number) => T
+    ) {
+        type IndexT = readonly [number, T];
+        return Stream.iterate(
+            [0, initialValue] as IndexT,
+            ([_, t], i) => stopCondition(t, i),
+            ([_, t], i) => [i, nextValue(t, i)] as IndexT
+        );
+    }
+
+    static iterateInfinite<T>(initialValue: T, nextValue: (prevValue: T, index: number) => T) {
+        return Stream.iterate(initialValue, () => false, nextValue);
+    }
+
+    static iterateInfiniteWithIndex<T>(initialValue: T, nextValue: (prevValue: T, index: number) => T) {
+        return Stream.iterateWithIndex(initialValue, () => false, nextValue);
+    }
+
     map<R>(mapFn: (t: T) => R) {
         const stream = this.stream;
         const mapped = (function* () {
-            for (const t of stream) {
-                yield mapFn(t)
+            for (let it = stream.next(); !it.done; it = stream.next()) {
+                const t = it.value;
+                yield mapFn(t);
             }
         })();
         return new Stream(mapped);
@@ -26,25 +61,44 @@ class Stream<T>{
 
     filter(filterFn: (t: T) => boolean) {
         const stream = this.stream;
-        const mapped = (function* () {
-            for (const t of stream) {
+        const filtered = (function* () {
+            for (let it = stream.next(); !it.done; it = stream.next()) {
+                const t = it.value;
                 if (filterFn(t)) {
                     yield t;
                 }
             }
         })();
-        return new Stream(mapped);
+        return new Stream(filtered);
+    }
+
+    takeWhile(predicate: (t: T) => boolean) {
+        const stream = this.stream;
+        const taken = (function* () {
+            for (let it = stream.next(); !it.done && predicate(it.value); it = stream.next()) {
+                yield it.value;
+            }
+        })();
+        return new Stream(taken);
+    }
+
+    take(n: number) {
+        const count = [0];
+        const predicate = () => count[0]++ < n;
+        return this.takeWhile(predicate);
     }
 
     forEach(consumer: (t: T) => void) {
-        for (const t of this.stream) {
+        for (let it = this.stream.next(); !it.done; it = this.stream.next()) {
+            const t = it.value;
             consumer(t);
         }
     }
 
     reduce<R>(reducerFn: (r: R, t: T) => R, identity: R) {
         let reduced = identity;
-        for (const t of this.stream) {
+        for (let it = this.stream.next(); !it.done; it = this.stream.next()) {
+            const t = it.value;
             reduced = reducerFn(reduced, t);
         }
         return reduced;
@@ -52,7 +106,8 @@ class Stream<T>{
 
     sum() {
         let s = 0;
-        for (const t of this.stream) {
+        for (let it = this.stream.next(); !it.done; it = this.stream.next()) {
+            const t = it.value;
             s += t as number;
         }
         return s;
@@ -70,6 +125,28 @@ class Stream<T>{
             },
             new Set<T>()
         );
+    }
+
+    allMatch(predicate: (t: T) => boolean) {
+        for (let it = this.stream.next(); !it.done; it = this.stream.next()) {
+            if (!predicate(it.value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    anyMatch(predicate: (t: T) => boolean) {
+        for (let it = this.stream.next(); !it.done; it = this.stream.next()) {
+            if (predicate(it.value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    noneMatch(predicate: (t: T) => boolean) {
+        return !this.anyMatch(predicate);
     }
 
     groupBy<K, V>(keyMapper: (t: T) => K, valueMapper: (t: T) => V) {
