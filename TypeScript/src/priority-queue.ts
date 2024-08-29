@@ -4,7 +4,7 @@ class PriorityQueue<T> implements Iterable<T> {
     private heap: T[] = [];
     private compareFn: CompareFn<T> = (a, b) => a === b ? 0 : (a < b ? -1 : 1);
 
-    constructor(data?: Iterable<T>, compareFn?: CompareFn<T>) {
+    constructor({ data, compareFn }: { data?: Iterable<T>, compareFn?: CompareFn<T> } = {}) {
         if (data != null) this.heap = [...data];
         if (compareFn != null) this.compareFn = compareFn;
         this.buildHeap();
