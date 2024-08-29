@@ -104,12 +104,7 @@ class Stream<T> {
     }
 
     sum() {
-        let s = 0;
-        for (let it = this.stream.next(); !it.done; it = this.stream.next()) {
-            const t = it.value;
-            s += t as number;
-        }
-        return s;
+        return this.reduce((s, t) => s + (t as number), 0);
     }
 
     toArray() {
