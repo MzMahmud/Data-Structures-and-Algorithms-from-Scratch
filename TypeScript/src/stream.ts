@@ -196,25 +196,17 @@ class Stream<T> {
 
     max(compareFn?: (a: T, b: T) => number) {
         if (compareFn == null) compareFn = (a, b) => a === b ? 0 : a < b ? -1 : 1;
-        const _max = this.reduce(
-            (max, t) => {
-                if (max[0] === null || compareFn(t, max[0]) > 0) max[0] = t;
-                return max;
-            },
-            [null as T | null]
+        return this.reduce(
+            (max, t) => (max === null || compareFn(t, max) > 0) ? t : max,
+            null as T | null
         );
-        return _max[0];
     }
 
     min(compareFn?: (a: T, b: T) => number) {
         if (compareFn == null) compareFn = (a, b) => a === b ? 0 : a < b ? -1 : 1;
-        const _min = this.reduce(
-            (min, t) => {
-                if (min[0] === null || compareFn(t, min[0]) < 0) min[0] = t;
-                return min;
-            },
-            [null as T | null]
+        return this.reduce(
+            (min, t) => (min === null || compareFn(t, min) < 0) ? t : min,
+            null as T | null
         );
-        return _min[0];
     }
 }
