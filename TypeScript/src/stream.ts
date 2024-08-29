@@ -14,12 +14,12 @@ class Stream<T> {
 
     static iterate<T>(
         initialValue: T,
-        stopCondition: (t: T, index: number) => boolean,
+        iterationCondition: (t: T, index: number) => boolean,
         nextValue: (prevValue: T, index: number) => T
     ) {
         const stream = (function* () {
             let i = 0;
-            for (let t = initialValue; !stopCondition(t, i); t = nextValue(t, i)) {
+            for (let t = initialValue; iterationCondition(t, i); t = nextValue(t, i)) {
                 yield t;
                 i++;
             }
@@ -29,22 +29,22 @@ class Stream<T> {
 
     static iterateWithIndex<T>(
         initialValue: T,
-        stopCondition: (t: T, index: number) => boolean,
+        iterationCondition: (t: T, index: number) => boolean,
         nextValue: (prevValue: T, index: number) => T
     ) {
         return Stream.iterate(
             [0, initialValue] as readonly [number, T],
-            ([_, t], i) => stopCondition(t, i),
+            ([_, t], i) => iterationCondition(t, i),
             ([_, t], i) => [i, nextValue(t, i)] as readonly [number, T]
         );
     }
 
     static iterateInfinite<T>(initialValue: T, nextValue: (prevValue: T, index: number) => T) {
-        return Stream.iterate(initialValue, () => false, nextValue);
+        return Stream.iterate(initialValue, () => true, nextValue);
     }
 
     static iterateInfiniteWithIndex<T>(initialValue: T, nextValue: (prevValue: T, index: number) => T) {
-        return Stream.iterateWithIndex(initialValue, () => false, nextValue);
+        return Stream.iterateWithIndex(initialValue, () => true, nextValue);
     }
 
     map<R>(mapFn: (t: T) => R) {
