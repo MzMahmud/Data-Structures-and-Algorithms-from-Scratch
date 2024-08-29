@@ -32,11 +32,10 @@ class Stream<T> {
         stopCondition: (t: T, index: number) => boolean,
         nextValue: (prevValue: T, index: number) => T
     ) {
-        type IndexT = readonly [number, T];
         return Stream.iterate(
-            [0, initialValue] as IndexT,
+            [0, initialValue] as readonly [number, T],
             ([_, t], i) => stopCondition(t, i),
-            ([_, t], i) => [i, nextValue(t, i)] as IndexT
+            ([_, t], i) => [i, nextValue(t, i)] as readonly [number, T]
         );
     }
 
