@@ -47,6 +47,22 @@ class Stream<T> {
         return Stream.iterateWithIndex(initialValue, () => true, nextValue);
     }
 
+    static concat<T>(...streams: Stream<T>[]) {
+        const concated = (function* () {
+            for (const { stream } of streams) {
+                for (let it = stream.next(); !it.done; it = stream.next()) {
+                    yield it.value;
+                }
+            }
+        })();
+        return new Stream(concated);
+    }
+
+    static concatIterable<T>(...itarables: Iterable<T>[]) {
+        const streams = itarables.map(it => Stream.create(...it));
+        return Stream.concat(...streams);
+    }
+
     map<R>(mapFn: (t: T) => R) {
         const stream = this.stream;
         const mapped = (function* () {
@@ -92,6 +108,22 @@ class Stream<T> {
         const count = [0];
         const predicate = () => count[0]++ < n;
         return this.takeWhile(predicate);
+    }
+
+    append(stream: Stream<T>) {
+        return Stream.concat(this, stream);
+    }
+
+    appendIterable(itarable: Iterable<T>) {
+        return Stream.concat(this, Stream.create(...itarable));
+    }
+
+    prepend(stream: Stream<T>) {
+        return Stream.concat(stream, this);
+    }
+
+    prependIterable(itarable: Iterable<T>) {
+        return Stream.concat(Stream.create(...itarable), this);
     }
 
     forEach(consumer: (t: T) => void) {
